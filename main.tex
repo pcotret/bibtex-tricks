@@ -1,0 +1,43 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=1cm,bottom=1cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Author highlighting
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\pagenumbering{gobble}
+
+\title{How to emphasize authors automatically in a BibTeX file?}
+\author{You}
+\date{}
+\begin{document}
+\maketitle
+The solution came from: \url{https://www.sethajacobson.com/notes/2021/3/1/to-bold-and-italicize-specific-author-names-in-a-latex-generated-citation}. In this document, I wanted to emphasize two imaginary authors: \textbf{John Smith} and \underline{Emily Johnson}.
+\section*{Remarks}
+\begin{itemize}
+    \item List of references generated with ChatGPT.
+    \item The plain bibliography file style was downloaded from: \url{http://ftp.cs.stanford.edu/pub/tex/bibtex/plain.bst}.
+\end{itemize}
+
+\section*{How to add other authors?}
+\begin{itemize}
+    \item Add a macro at the top of the BST file. Name must be \textbf{exactly} like in the bibliography.
+    \item Add a line in \texttt{FUNCTION {format.names}} where \texttt{bold.if.jsmith} and \texttt{under.if.ejohnson} are already added.
+\end{itemize}
+
+\nocite{*}
+
+\bibliographystyle{myplain}
+\bibliography{sample}
+
+\end{document}
