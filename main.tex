@@ -8,36 +8,95 @@
 % Replace `letterpaper' with `a4paper' for UK/EU standard size
 \usepackage[a4paper,top=1cm,bottom=1cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
 
-% Author highlighting
+\usepackage[resetlabels,labeled]{multibib}
+\newcites{J}{Journals}
+\newcites{I}{International conferences}
 
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{blindtext}
+\usepackage{minted}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=JungleGreen,
+    filecolor=DarkOrchid,      
+    urlcolor=Blue,
+    }
 \pagenumbering{gobble}
 
-\title{How to emphasize authors automatically in a BibTeX file?}
-\author{You}
+\title{BibteX tricks}
 \date{}
 \begin{document}
 \maketitle
-The solution came from: \url{https://www.sethajacobson.com/notes/2021/3/1/to-bold-and-italicize-specific-author-names-in-a-latex-generated-citation}. In this document, I wanted to emphasize two imaginary authors: \textbf{John Smith} and \underline{Emily Johnson}.
-\section*{Remarks}
-\begin{itemize}
-    \item List of references generated with ChatGPT.
-    \item The plain bibliography file style was downloaded from: \url{http://ftp.cs.stanford.edu/pub/tex/bibtex/plain.bst}.
-\end{itemize}
+\noindent List of references are generated with ChatGPT.\\
 
-\section*{How to add other authors?}
+\noindent The plain bibliography file style was downloaded from: \url{http://ftp.cs.stanford.edu/pub/tex/bibtex/plain.bst}.\\
+
+\noindent In this document, I want to:
+\begin{enumerate}
+    \item Emphasize two imaginary authors: \textbf{John Smith} and \underline{Emily Johnson}.
+    \item Separate journals, conferences with different BibTeX keys.
+\end{enumerate}
+
+\section{How to add other authors?}
+Solution from \href{https://www.sethajacobson.com/notes/2021/3/1/to-bold-and-italicize-specific-author-names-in-a-latex-generated-citation}{this blog}. 
 \begin{itemize}
     \item Add a macro at the top of the BST file. Name must be \textbf{exactly} like in the bibliography.
     \item Add a line in \texttt{FUNCTION {format.names}} where \texttt{bold.if.jsmith} and \texttt{under.if.ejohnson} are already added.
 \end{itemize}
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+]
+{latex}
+% Add macro to make author underline
+FUNCTION {under.if.ejohnson}
+    { duplicate$ purify$ 
+    "Emily Johnson"
+    purify$ = { 
+    "\underline{"
+    swap$ * "}" * } 'skip$ if$
+}
+% FUNCTION {format.names}
+{ s nameptr "{ff~}{vv~}{ll}{, jj}" format.name$
+bold.if.jsmith
+under.if.ejohnson
+'t :=
+\end{minted}
 
-\nocite{*}
+\section{How to add other bibliography sections?}
+Solution from \href{https://www.overleaf.com/learn/latex/Questions/Creating_multiple_bibliographies_in_the_same_document}{Overleaf}.
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+]
+{latex}
+\usepackage[resetlabels,labeled]{multibib}
+\newcites{Math}{Math Readings}
+\newcites{Phys}{Physics Readings}
+% [...]
+\cite{paper1} and \cite{paper2} were published later than 
+\citeMath{paper3}. See also \citePhys{paper4}.
+\bibliographystyle{unsrt}
+\bibliography{references}
+\bibliographystyleMath{unsrt}
+\bibliographyMath{refs-etc}
+\bibliographystylePhys{unsrt}
+\bibliographyPhys{refs-etc}
+\end{minted}
 
+\nocite{brown2025ai} \nociteI{brown2031future} \nociteJ{clark2029neural,davis2026robotics,johnson2023deep}
+\newpage
 \bibliographystyle{myplain}
 \bibliography{sample}
-
+\bibliographystyleI{myplain}
+\bibliographyI{sample}
+\bibliographystyleJ{myplain}
+\bibliographyJ{sample}
 \end{document}
