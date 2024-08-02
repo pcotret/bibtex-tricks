@@ -13,11 +13,19 @@
 \newcites{I}{International conferences}
 
 % Useful packages
-\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{minted}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \usepackage[dvipsnames]{xcolor}
+\usepackage{xpatch}
+\makeatletter
+\newcommand\removebibheader
+  {\xpatchcmd\std@thebibliography
+    {\section*{\refname}%
+     \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+    }{}{}{}%
+  }
+\makeatother
 \hypersetup{
     colorlinks=true,
     linkcolor=JungleGreen,
@@ -38,6 +46,7 @@
 \begin{enumerate}
     \item Emphasize two imaginary authors: \textbf{John Smith} and \underline{Emily Johnson}.
     \item Separate journals, conferences with different BibTeX keys.
+    \item Make references in different subsections.
 \end{enumerate}
 
 \section{How to add other authors?}
@@ -94,9 +103,19 @@ baselinestretch=1.2,
 \nocite{brown2025ai} \nociteI{brown2031future} \nociteJ{clark2029neural,davis2026robotics,johnson2023deep}
 \newpage
 \bibliographystyle{myunsrt}
+\section{Publications list}
+\subsection{Unsorted references}
+{\removebibheader
 \bibliography{sample}
+}
 \bibliographystyleI{myunsrt}
+\subsection{International conferences}
+{\removebibheader
 \bibliographyI{sample}
+}
 \bibliographystyleJ{myunsrt}
+\subsection{Journals}
+{\removebibheader
 \bibliographyJ{sample}
+}
 \end{document}
